@@ -1,0 +1,1 @@
+// Liability domain model placeholder.

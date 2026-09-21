@@ -1,0 +1,6 @@
+openapi: 3.0.3
+info:
+  title: Wealth-e API
+  version: 0.0.0-architecture
+  description: Contract placeholder; endpoints will be defined during implementation.
+paths: {}

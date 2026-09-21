@@ -1,1 +1,1 @@
-// Valuation HTTP adapter/controller placeholder.
+// ValuationController : controller du module valuation.

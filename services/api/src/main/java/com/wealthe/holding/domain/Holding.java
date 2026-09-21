@@ -1,1 +1,1 @@
-// Holding domain model placeholder.
+// Holding : domain du module holding.

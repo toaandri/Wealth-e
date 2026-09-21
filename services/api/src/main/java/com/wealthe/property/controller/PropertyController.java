@@ -1,1 +1,1 @@
-// Property HTTP adapter/controller placeholder.
+// PropertyController : controller du module property.

@@ -1,1 +1,1 @@
-// Holding application use-case/service placeholder.
+// HoldingService : application du module holding.

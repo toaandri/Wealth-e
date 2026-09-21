@@ -1,1 +1,1 @@
-// Account HTTP adapter/controller placeholder.
+// AccountController : controller du module account.

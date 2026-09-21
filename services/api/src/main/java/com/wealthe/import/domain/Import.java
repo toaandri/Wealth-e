@@ -1,1 +1,0 @@
-// Import domain model placeholder.

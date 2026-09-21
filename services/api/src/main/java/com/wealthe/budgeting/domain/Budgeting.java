@@ -1,1 +1,0 @@
-// Budgeting domain model placeholder.

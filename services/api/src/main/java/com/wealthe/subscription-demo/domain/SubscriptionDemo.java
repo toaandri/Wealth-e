@@ -1,1 +1,0 @@
-// SubscriptionDemo domain model placeholder.

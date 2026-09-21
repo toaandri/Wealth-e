@@ -1,1 +1,1 @@
-// Analytics HTTP adapter/controller placeholder.
+// AnalyticsController : controller du module analytics.

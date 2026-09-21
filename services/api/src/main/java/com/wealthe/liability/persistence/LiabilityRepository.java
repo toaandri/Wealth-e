@@ -1,1 +1,1 @@
-// Liability persistence boundary/repository placeholder.
+// LiabilityRepository : persistence du module liability.

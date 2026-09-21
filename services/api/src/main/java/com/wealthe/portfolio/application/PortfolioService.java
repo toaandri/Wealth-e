@@ -1,1 +1,1 @@
-// Portfolio application use-case/service placeholder.
+// PortfolioService : application du module portfolio.

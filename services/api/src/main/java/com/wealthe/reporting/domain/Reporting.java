@@ -1,1 +1,0 @@
-// Reporting domain model placeholder.

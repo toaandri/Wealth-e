@@ -1,1 +1,1 @@
-// Holding persistence boundary/repository placeholder.
+// HoldingRepository : persistence du module holding.

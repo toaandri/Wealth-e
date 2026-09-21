@@ -1,1 +1,1 @@
-// Account domain model placeholder.
+// Account : domain du module account.

@@ -1,1 +1,0 @@
-// Analytics domain model placeholder.

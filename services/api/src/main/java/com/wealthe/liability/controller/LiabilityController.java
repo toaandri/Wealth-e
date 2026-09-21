@@ -1,1 +1,1 @@
-// Liability HTTP adapter/controller placeholder.
+// LiabilityController : controller du module liability.

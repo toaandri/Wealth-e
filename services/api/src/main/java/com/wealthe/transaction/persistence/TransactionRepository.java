@@ -1,1 +1,1 @@
-// Transaction persistence boundary/repository placeholder.
+// TransactionRepository : persistence du module transaction.

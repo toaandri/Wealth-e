@@ -1,0 +1,1 @@
+// Page web investment details.

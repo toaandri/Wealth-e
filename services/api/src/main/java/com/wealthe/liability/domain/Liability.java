@@ -1,1 +1,1 @@
-// Liability domain model placeholder.
+// Liability : domain du module liability.

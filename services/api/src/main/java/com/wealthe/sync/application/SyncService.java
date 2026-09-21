@@ -1,1 +1,1 @@
-// Sync application use-case/service placeholder.
+// SyncService : application du module sync.

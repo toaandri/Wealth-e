@@ -1,0 +1,1 @@
+// Affichage mobile des montants.

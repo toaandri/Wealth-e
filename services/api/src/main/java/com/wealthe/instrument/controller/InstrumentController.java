@@ -1,1 +1,1 @@
-// Instrument HTTP adapter/controller placeholder.
+// InstrumentController : controller du module instrument.

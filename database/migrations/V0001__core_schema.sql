@@ -1,0 +1,1 @@
+-- Future Core schema: users, portfolios, accounts, ledger, holdings, prices, FX, property, liabilities and snapshots.

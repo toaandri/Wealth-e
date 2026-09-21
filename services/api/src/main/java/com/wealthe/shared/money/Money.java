@@ -1,0 +1,1 @@
+// Montant decimal et devise.

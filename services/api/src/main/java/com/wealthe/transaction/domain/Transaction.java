@@ -1,1 +1,1 @@
-// Transaction domain model placeholder.
+// Transaction : domain du module transaction.

@@ -1,1 +1,1 @@
-// Portfolio persistence boundary/repository placeholder.
+// PortfolioRepository : persistence du module portfolio.

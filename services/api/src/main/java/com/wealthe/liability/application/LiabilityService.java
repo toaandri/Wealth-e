@@ -1,1 +1,1 @@
-// Liability application use-case/service placeholder.
+// LiabilityService : application du module liability.

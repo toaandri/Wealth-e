@@ -1,1 +1,1 @@
-// Account persistence boundary/repository placeholder.
+// AccountRepository : persistence du module account.

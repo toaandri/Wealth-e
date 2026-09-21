@@ -1,1 +1,1 @@
-// Holding HTTP adapter/controller placeholder.
+// HoldingController : controller du module holding.

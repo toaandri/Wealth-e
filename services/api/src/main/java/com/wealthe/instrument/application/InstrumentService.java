@@ -1,1 +1,1 @@
-// Instrument application use-case/service placeholder.
+// InstrumentService : application du module instrument.

@@ -1,0 +1,1 @@
+// Etiquette des donnees synthetiques.

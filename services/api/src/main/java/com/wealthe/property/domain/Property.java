@@ -1,1 +1,1 @@
-// Property domain model placeholder.
+// Property : domain du module property.

@@ -1,0 +1,1 @@
+// Ecran mobile account details.

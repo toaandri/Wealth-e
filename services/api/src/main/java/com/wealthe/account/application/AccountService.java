@@ -1,1 +1,1 @@
-// Account application use-case/service placeholder.
+// AccountService : application du module account.

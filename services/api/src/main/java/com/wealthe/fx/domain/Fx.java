@@ -1,1 +1,0 @@
-// Fx domain model placeholder.

@@ -1,1 +1,1 @@
-// Portfolio HTTP adapter/controller placeholder.
+// PortfolioController : controller du module portfolio.

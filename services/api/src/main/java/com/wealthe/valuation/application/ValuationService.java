@@ -1,1 +1,1 @@
-// Valuation application use-case/service placeholder.
+// ValuationService : application du module valuation.

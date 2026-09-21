@@ -1,1 +1,1 @@
-// Instrument persistence boundary/repository placeholder.
+// InstrumentRepository : persistence du module instrument.

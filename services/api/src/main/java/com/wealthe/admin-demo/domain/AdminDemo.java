@@ -1,1 +1,0 @@
-// AdminDemo domain model placeholder.

@@ -1,1 +1,1 @@
-// Typed mobile API client placeholder.
+// Client API mobile et URL selon environnement.

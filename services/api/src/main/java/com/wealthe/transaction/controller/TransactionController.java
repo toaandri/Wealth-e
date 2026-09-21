@@ -1,1 +1,1 @@
-// Transaction HTTP adapter/controller placeholder.
+// TransactionController : controller du module transaction.

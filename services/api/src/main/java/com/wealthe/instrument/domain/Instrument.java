@@ -1,1 +1,1 @@
-// Instrument domain model placeholder.
+// Instrument : domain du module instrument.

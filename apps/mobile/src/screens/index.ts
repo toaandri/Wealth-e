@@ -1,1 +1,0 @@
-// Mobile screen registry placeholder.

@@ -1,1 +1,1 @@
-// Property application use-case/service placeholder.
+// PropertyService : application du module property.

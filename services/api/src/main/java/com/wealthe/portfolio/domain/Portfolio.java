@@ -1,1 +1,1 @@
-// Portfolio domain model placeholder.
+// Portfolio : domain du module portfolio.

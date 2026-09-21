@@ -1,1 +1,1 @@
-// Property persistence boundary/repository placeholder.
+// PropertyRepository : persistence du module property.

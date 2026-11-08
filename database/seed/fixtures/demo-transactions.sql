@@ -1,1 +1,0 @@
--- Synthetic ledger transactions will be defined here.

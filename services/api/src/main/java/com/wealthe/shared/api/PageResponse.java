@@ -1,1 +1,0 @@
-// Pagination des reponses.

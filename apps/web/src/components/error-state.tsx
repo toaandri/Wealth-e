@@ -1,1 +1,0 @@
-// Affichage des erreurs recuperables.

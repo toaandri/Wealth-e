@@ -1,0 +1,3 @@
+// Page web investments.
+
+export {};

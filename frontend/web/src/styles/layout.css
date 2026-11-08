@@ -1,0 +1,108 @@
+/* ===== Structure générale ===== */
+.app-shell { min-height: 100vh; }
+
+.app-shell__main { padding-bottom: 80px; } /* place pour la barre du bas */
+.app-shell__main:focus { outline: none; }
+
+/* ===== Lien d'évitement (visible au clavier seulement) ===== */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  background: var(--color-primary-hover);
+  color: #fff;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+}
+.skip-link:focus { top: var(--space-4); }
+
+/* ===== Logo ===== */
+.brand { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-6); }
+.brand__logo {
+  display: inline-grid; place-items: center;
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff; font-weight: 700;
+}
+.brand__name { font-weight: 700; letter-spacing: 0.02em; }
+
+/* ===== Barre du haut (mobile/tablette) ===== */
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ===== Barre de navigation du bas ===== */
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-nav__list {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  list-style: none; margin: 0; padding: 0;
+}
+.bottom-nav__link {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 56px; /* zone tactile confortable */
+  padding: var(--space-1);
+  font-size: var(--font-size-xs); font-weight: 600; text-align: center;
+  color: var(--color-text-muted); text-decoration: none;
+}
+.bottom-nav__link.is-active {
+  color: var(--color-primary-hover); /* #0F766E : contraste AA sur blanc */
+  box-shadow: inset 0 3px 0 var(--color-primary);
+}
+
+/* ===== Sidebar (cachée sur mobile) ===== */
+.sidebar { display: none; }
+.sidebar__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sidebar__link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted); text-decoration: none; font-weight: 500;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.sidebar__link:hover { background: var(--color-bg); color: var(--color-text); }
+.sidebar__link.is-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  font-weight: 600;
+}
+.sidebar__footer { margin-top: auto; font-size: var(--font-size-xs); color: var(--color-text-muted); }
+
+/* ===== Desktop ===== */
+@media (min-width: 1024px) {
+  .app-shell { display: grid; grid-template-columns: 248px 1fr; }
+  .topbar, .bottom-nav { display: none; }
+  .sidebar {
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: var(--space-5) var(--space-4);
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+  }
+  .app-shell__main { padding-bottom: 0; min-width: 0; }
+}
+
+/* ===== Pages « À venir » et « Plus » ===== */
+.page-placeholder { padding: var(--space-6) var(--space-5); display: grid; gap: var(--space-3); }
+.page-placeholder h1 { font-size: var(--font-size-xl); }
+.page-placeholder p { color: var(--color-text-muted); }
+.more-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.more-list__link {
+  display: block; padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text); text-decoration: none; font-weight: 500;
+}

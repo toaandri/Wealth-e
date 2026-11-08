@@ -1,1 +1,0 @@
-# Web container definition placeholder.

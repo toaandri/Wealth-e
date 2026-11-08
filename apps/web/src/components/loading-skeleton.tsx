@@ -1,1 +1,0 @@
-// Affichage pendant le chargement.

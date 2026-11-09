@@ -1,1 +1,0 @@
-// Stockage securise des jetons.

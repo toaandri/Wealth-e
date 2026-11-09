@@ -1,1 +1,0 @@
-// Ecran mobile settings.

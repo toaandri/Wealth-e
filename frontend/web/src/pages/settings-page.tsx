@@ -1,3 +1,0 @@
-// Page web settings.
-
-export {};

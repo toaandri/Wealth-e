@@ -4,7 +4,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 <parent>
 <groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>3.5.7</version><relativePath/>
 </parent>
-<groupId>com.wealthe</groupId><artifactId>wealth-e-backend</artifactId><version>0.1.0</version>
+<groupId>com.wealthe</groupId><artifactId>wealth-e-backend</artifactId><version>0.2.0</version>
 <name>wealth-e-backend</name><description>Wealth-e REST API</description>
 <properties><java.version>25</java.version></properties>
 <dependencies>

@@ -1,6 +1,6 @@
-# Wealth-e Backend — V0.1
+# Wealth-e Backend — V2 Core
 
-Spring Boot REST API for the normal/core backend. The AI backend remains a separate responsibility.
+Spring Boot REST API for the Wealth-e **Core backend**. The AI backend and frontend are separate team responsibilities.
 
 ## Stack
 - Java 25
@@ -9,116 +9,123 @@ Spring Boot REST API for the normal/core backend. The AI backend remains a separ
 - Spring Data JPA / Hibernate
 - MySQL
 - Bean Validation
-- BCrypt password hashing
+- BCrypt
 
-## First 50% API
+## Core API
 
 ### Health
-`GET /api/health`
+- `GET /api/health`
 
 ### Auth
-`POST /api/auth/register`
-```json
-{"email":"prosper@example.com","password":"secret123","fullName":"Prosper","currency":"MGA"}
-```
-`POST /api/auth/login`
-```json
-{"email":"prosper@example.com","password":"secret123"}
-```
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
 ### Accounts
-`GET /api/accounts?userId=1`
-`GET /api/accounts/{id}`
-`POST /api/accounts`
-`PUT /api/accounts/{id}`
-`DELETE /api/accounts/{id}`
-
-Create:
-```json
-{"userId":1,"name":"BMOI","type":"BANK","currency":"MGA","balance":150000}
-```
-Types: `CASH`, `BANK`, `MOBILE_MONEY`, `SAVINGS`, `INVESTMENT`, `OTHER`
+- `GET /api/accounts?userId=1`
+- `GET /api/accounts/{id}`
+- `POST /api/accounts`
+- `PUT /api/accounts/{id}`
+- `DELETE /api/accounts/{id}`
 
 ### Transactions
-`GET /api/transactions?userId=1`
-`GET /api/transactions/account/{accountId}`
-`POST /api/transactions`
-`DELETE /api/transactions/{id}`
+- `GET /api/transactions?userId=1`
+- `GET /api/transactions/account/{accountId}`
+- `POST /api/transactions`
+- `PUT /api/transactions/{id}`
+- `DELETE /api/transactions/{id}`
 
-Create:
-```json
-{"accountId":1,"amount":25000,"type":"EXPENSE","category":"FOOD","description":"Lunch"}
-```
+Creating/deleting/updating a transaction updates the related account balance atomically.
 
 ### Dashboard
-`GET /api/dashboard?userId=1`
+- `GET /api/dashboard?userId=1`
 
-## Project structure
+Includes balances, income, expenses, asset/liability totals and module counts.
+
+### Budgets
+- `GET /api/budgets?userId=1`
+- `GET /api/budgets/{id}`
+- `POST /api/budgets`
+- `PUT /api/budgets/{id}`
+- `DELETE /api/budgets/{id}`
+
+Budget responses include `spent` and `remaining` calculated from transactions in the budget date range.
+
+### Goals
+- `GET /api/goals?userId=1`
+- `GET /api/goals/{id}`
+- `POST /api/goals`
+- `PUT /api/goals/{id}`
+- `DELETE /api/goals/{id}`
+
+### Investments
+- `GET /api/investments?userId=1`
+- `GET /api/investments/{id}`
+- `POST /api/investments`
+- `PUT /api/investments/{id}`
+- `DELETE /api/investments/{id}`
+
+Responses calculate gain/loss and gain/loss percentage.
+
+### Assets
+- `GET /api/assets?userId=1`
+- `GET /api/assets/{id}`
+- `POST /api/assets`
+- `PUT /api/assets/{id}`
+- `DELETE /api/assets/{id}`
+
+### Liabilities
+- `GET /api/liabilities?userId=1`
+- `GET /api/liabilities/{id}`
+- `POST /api/liabilities`
+- `PUT /api/liabilities/{id}`
+- `DELETE /api/liabilities/{id}`
+
+### Net worth
+- `GET /api/net-worth?userId=1`
+
+Formula:
+`netWorth = totalAssets - totalLiabilities`
+
+Assets include account balances, investment current values and other assets. Liabilities use remaining balance.
+
+### Analytics
+- `GET /api/analytics?userId=1`
+- Optional date range:
+  `GET /api/analytics?userId=1&from=2026-01-01&to=2026-12-31`
+
+Returns total income, expenses, net cash flow, expenses by category and monthly statistics.
+
+## Structure
 
 ```text
 src/main/java/com/wealthe/
-├── WealthEApplication.java
-├── config/        SecurityConfig
-├── controller/
-│   └── rest/      Auth / Account / Transaction / Dashboard / Health REST controllers
-├── dto/
-│   ├── request/   LoginRequest, RegisterRequest, CreateAccountRequest, UpdateAccountRequest, CreateTransactionRequest
-│   └── response/  AuthResponse, UserResponse, AccountResponse, TransactionResponse, DashboardResponse
-├── entity/        User, Account, Transaction
-├── enumeration/   AccountType, TransactionType
-├── exception/     BusinessException, ResourceNotFoundException, GlobalExceptionHandler
-├── mapper/        UserMapper, AccountMapper, TransactionMapper
-├── repository/    UserRepository, AccountRepository, TransactionRepository
-└── service/       AuthService, UserService, AccountService, TransactionService, DashboardService
+├── config/
+├── controller/rest/
+├── dto/request/
+├── dto/response/
+├── entity/
+├── enumeration/
+├── exception/
+├── mapper/
+├── repository/
+└── service/
 ```
 
-A Postman collection is available in `postman/WealthE.postman_collection.json`.
+## Run
 
-## Run on Windows
-
-From `backend`:
 ```powershell
 mvnw.cmd spring-boot:run
 ```
 
-If the wrapper is not present:
-```powershell
-mvn spring-boot:run
-```
+API: `http://localhost:8080/api/health`
 
-API:
-`http://localhost:8080/api/health`
-
-## MySQL
-
-Create the database:
-```sql
-CREATE DATABASE wealth_e;
-```
-
-Set credentials in `application.properties` or environment variables:
+For development MySQL:
 ```text
-DB_URL=jdbc:mysql://localhost:3306/wealth_e
+DB_URL=jdbc:mysql://localhost:3306/wealth_e?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
 DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
 
-Hibernate uses `ddl-auto=update` for development.
+## Important scope
 
-## LAN demo
-
-Backend PC:
-```properties
-server.address=0.0.0.0
-server.port=8080
-```
-
-Then frontend PC uses:
-`http://BACKEND_PC_IP:8080/api/...`
-
-Find the backend PC IP:
-```powershell
-ipconfig
-```
-
-For production, replace `ddl-auto=update` with migrations and add real JWT/session security before exposing the API publicly.
+This repository contains the **Core backend only**. AI and frontend are intentionally outside this module.

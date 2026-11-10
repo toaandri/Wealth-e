@@ -1,0 +1,9 @@
+package com.wealthe.service;
+import com.wealthe.dto.request.LiabilityRequest; import com.wealthe.dto.response.LiabilityResponse; import com.wealthe.entity.Liability; import com.wealthe.exception.ResourceNotFoundException; import com.wealthe.repository.LiabilityRepository; import org.springframework.stereotype.Service; import java.math.BigDecimal; import java.util.List;
+@Service public class LiabilityService{
+ private final LiabilityRepository repo; private final UserService users; public LiabilityService(LiabilityRepository r,UserService u){repo=r;users=u;}
+ public List<LiabilityResponse> all(Long userId){return repo.findByUserIdOrderByIdDesc(userId).stream().map(this::response).toList();} public LiabilityResponse one(Long id){return response(get(id));}
+ public LiabilityResponse create(LiabilityRequest r){Liability l=new Liability();l.setUser(users.getById(r.userId()));l.setName(r.name());l.setType(r.type());l.setPrincipalAmount(r.principalAmount());l.setRemainingBalance(r.remainingBalance());l.setInterestRate(r.interestRate()==null?BigDecimal.ZERO:r.interestRate());l.setDueDate(r.dueDate());return response(repo.save(l));}
+ public LiabilityResponse update(Long id,LiabilityRequest r){Liability l=get(id);l.setName(r.name());l.setType(r.type());l.setPrincipalAmount(r.principalAmount());l.setRemainingBalance(r.remainingBalance());l.setInterestRate(r.interestRate()==null?BigDecimal.ZERO:r.interestRate());l.setDueDate(r.dueDate());return response(repo.save(l));}
+ public void delete(Long id){repo.delete(get(id));} public Liability get(Long id){return repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Liability not found"));} private LiabilityResponse response(Liability l){return new LiabilityResponse(l.getId(),l.getUser().getId(),l.getName(),l.getType(),l.getPrincipalAmount(),l.getRemainingBalance(),l.getInterestRate(),l.getDueDate());}
+}

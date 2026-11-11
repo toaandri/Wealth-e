@@ -1,0 +1,15 @@
+import { Navigate, useLocation } from "react-router-dom";
+import type { ReactNode } from "react";
+import { getAuthSession } from "../../lib/auth-session";
+
+type RequireAuthProps = {
+  children: ReactNode;
+};
+
+export function RequireAuth({ children }: RequireAuthProps) {
+  const location = useLocation();
+  if (!getAuthSession()) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  }
+  return children;
+}

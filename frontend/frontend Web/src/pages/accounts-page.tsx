@@ -1,11 +1,12 @@
-import { useSearchParams } from "react-router-dom";
-import { DemoDataBadge } from "../components/demo-data-badge";
+import { useEffect, useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { MoneyValue } from "../components/money-value";
 import { LoadingSkeleton } from "../components/loading-skeleton";
 import { EmptyState } from "../components/empty-state";
 import { ErrorState } from "../components/error-state";
-import { accountsDemoData } from "../features/accounts/accounts.demo";
+import { createAccount, getAccounts } from "../features/accounts/accounts.api";
 import type { AccountType } from "../features/accounts/accounts.types";
+import { getAuthSession } from "../lib/auth-session";
 
 // Libellés en français des types de comptes
 const TYPE_LABELS: Record<AccountType, string> = {
@@ -13,24 +14,68 @@ const TYPE_LABELS: Record<AccountType, string> = {
   savings: "Épargne",
   mobile_money: "Mobile money",
   cash: "Espèces",
+  investment: "Investissement",
+  other: "Autre",
 };
 
-const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
-
 export function AccountsPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const userId = getAuthSession()?.user.id;
+  const [accounts, setAccounts] = useState<Awaited<ReturnType<typeof getAccounts>>["accounts"]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newAccountName, setNewAccountName] = useState("");
+  const [newAccountType, setNewAccountType] = useState<AccountType>("checking");
+  const [newAccountBalance, setNewAccountBalance] = useState("0");
+  const [formError, setFormError] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
 
-  // Test des états via l'adresse (?state=loading|empty|error), en développement uniquement
-  const demoState = import.meta.env.DEV ? searchParams.get("state") : null;
+  async function handleCreateAccount(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!userId) return;
+    setFormError("");
+    setIsCreating(true);
+    try {
+      await createAccount({
+        userId,
+        name: newAccountName.trim(),
+        type: newAccountType,
+        currency: getAuthSession()?.user.currency ?? "MGA",
+        balance: Number(newAccountBalance),
+      });
+      setNewAccountName("");
+      setNewAccountType("checking");
+      setNewAccountBalance("0");
+      setShowCreateForm(false);
+      setRefreshKey((key) => key + 1);
+    } catch (requestError) {
+      setFormError(requestError instanceof Error ? requestError.message : "La création du compte a échoué.");
+    } finally {
+      setIsCreating(false);
+    }
+  }
 
-  const data = accountsDemoData;
-  const accounts = demoState === "empty" ? [] : data.accounts;
+  useEffect(() => {
+    if (!userId) return;
+    let active = true;
+    setIsLoading(true);
+    setError(false);
+    getAccounts(userId)
+      .then((response) => {
+        if (active) setAccounts(response.accounts);
+      })
+      .catch(() => {
+        if (active) setError(true);
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+    return () => { active = false; };
+  }, [userId, refreshKey]);
 
   function renderContent() {
-    if (demoState === "loading") {
+    if (isLoading) {
       return (
         <div className="card">
           <LoadingSkeleton lines={5} label="Chargement des comptes…" />
@@ -38,11 +83,12 @@ export function AccountsPage() {
       );
     }
 
-    if (demoState === "error") {
+    if (error) {
       return (
         <ErrorState
           title="Impossible de charger vos comptes"
-          onRetry={() => setSearchParams({})}
+          message="Vérifiez que le serveur REST est démarré, puis réessayez."
+          onRetry={() => setRefreshKey((key) => key + 1)}
         />
       );
     }
@@ -51,17 +97,17 @@ export function AccountsPage() {
       return (
         <EmptyState
           title="Aucun compte pour l'instant"
-          message="Vos comptes de démonstration apparaîtront ici."
+          message="Créez un compte pour commencer à suivre votre patrimoine."
         />
       );
     }
 
     return (
       <>
-        <section className="card summary-card" aria-label="Solde total des comptes">
-          <p className="summary-card__label">Solde total</p>
-          <MoneyValue amount={data.summary.totalBalance} className="summary-card__value" />
-          <p className="summary-card__meta">{data.summary.accountCount} comptes</p>
+        <section className="card summary-card" aria-label="Nombre de comptes">
+          <p className="summary-card__label">Comptes enregistrés</p>
+          <strong className="summary-card__value">{accounts.length}</strong>
+          <p className="summary-card__meta">Données chargées depuis votre espace Wealth-e</p>
         </section>
 
         <section aria-labelledby="accounts-list-title">
@@ -71,24 +117,15 @@ export function AccountsPage() {
             {accounts.map((account) => (
               <li key={account.id} className="card item-card">
                 <div className="item-card__main">
-                  <p className="item-card__title">{account.name}</p>
+                  <Link className="item-card__title account-title-link" to={`/accounts/${account.id}`}>{account.name}</Link>
                   <p className="item-card__meta">
-                    {TYPE_LABELS[account.type]} · {account.institution}
+                    {TYPE_LABELS[account.type]} · {account.currency}
                   </p>
+                  <p className="item-card__meta">N° {account.id} · Utilisateur {account.userId}</p>
                 </div>
 
                 <div className="item-card__side">
-                  <MoneyValue amount={account.balance} className="item-card__amount" />
-                  <p className="item-card__meta">
-                    Mis à jour :{" "}
-                    {account.lastUpdatedAt ? (
-                      <time dateTime={account.lastUpdatedAt}>
-                        {dateFormatter.format(new Date(account.lastUpdatedAt))}
-                      </time>
-                    ) : (
-                      "—"
-                    )}
-                  </p>
+                  <MoneyValue amount={account.balance} currency={account.currency} className="item-card__amount" />
                 </div>
               </li>
             ))}
@@ -104,10 +141,34 @@ export function AccountsPage() {
         <div>
           <p className="page-breadcrumb">Patrimoine / Comptes</p>
           <h1>Comptes</h1>
-          <p className="page-subtitle">Soldes de vos comptes de démonstration</p>
+          <p className="page-subtitle">Comptes et soldes enregistrés dans votre espace.</p>
         </div>
-        {data.isDemo ? <DemoDataBadge /> : null}
+        <button className="button" type="button" onClick={() => setShowCreateForm((visible) => !visible)}>
+          {showCreateForm ? "Annuler" : "Créer un compte"}
+        </button>
       </header>
+
+      {showCreateForm ? (
+        <form className="card account-create-form" onSubmit={handleCreateAccount}>
+          <h2 className="section-title">Nouveau compte</h2>
+          <label className="auth-field">
+            Nom du compte
+            <input value={newAccountName} onChange={(event) => setNewAccountName(event.target.value)} required maxLength={120} />
+          </label>
+          <label className="auth-field">
+            Type de compte
+            <select value={newAccountType} onChange={(event) => setNewAccountType(event.target.value as AccountType)}>
+              {Object.entries(TYPE_LABELS).map(([type, label]) => <option key={type} value={type}>{label}</option>)}
+            </select>
+          </label>
+          <label className="auth-field">
+            Solde initial ({getAuthSession()?.user.currency ?? "MGA"})
+            <input type="number" step="0.01" value={newAccountBalance} onChange={(event) => setNewAccountBalance(event.target.value)} required />
+          </label>
+          {formError ? <p className="auth-form-error" role="alert">{formError}</p> : null}
+          <button className="button" type="submit" disabled={isCreating}>{isCreating ? "Création…" : "Enregistrer le compte"}</button>
+        </form>
+      ) : null}
 
       {renderContent()}
     </div>

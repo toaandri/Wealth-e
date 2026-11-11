@@ -1,6 +1,6 @@
 type MoneyValueProps = {
   amount: number | null;
-  currency?: "MGA";
+  currency?: string;
   className?: string;
 };
 

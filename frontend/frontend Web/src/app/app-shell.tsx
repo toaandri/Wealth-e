@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "../components/sidebar";
 import { BottomNavigation } from "../components/bottom-navigation";
+import { LogoutButton } from "../components/logout-button";
 import "../styles/layout.css";
 
 export function AppShell() {
@@ -13,6 +14,7 @@ export function AppShell() {
       <header className="topbar">
         <span className="brand__logo" aria-hidden="true">W</span>
         <span className="brand__name">WEALTH-E</span>
+        <LogoutButton />
       </header>
 
       <main id="main-content" className="app-shell__main" tabIndex={-1}>

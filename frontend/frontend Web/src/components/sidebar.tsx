@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { NAV_ITEMS } from "../app/navigation";
+import { LogoutButton } from "./logout-button";
 
 export function Sidebar() {
   return (
@@ -24,6 +25,7 @@ export function Sidebar() {
         </ul>
       </nav>
 
+      <LogoutButton />
       <p className="sidebar__footer">Release v1.0.0-core</p>
     </aside>
   );

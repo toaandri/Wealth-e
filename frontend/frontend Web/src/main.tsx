@@ -2,10 +2,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app/app";
-import "@fontsource-variable/inter";
+// import "@fontsource-variable/inter";
 import "./styles/global.css";
 import "./styles/components.css";
 import "./styles/pages.css";
+import "./styles/auth.css";
 
 
 

@@ -1,11 +1,15 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { AppShell } from "./app-shell";
 import { NAV_ITEMS } from "./navigation";
+import { RequireAuth } from "../features/auth/require-auth";
 import { OverviewPage } from "../pages/overview-page";
 import { AccountsPage } from "../pages/accounts-page";
-import { TransactionsPage } from "../pages/transactions-page";
+import { AccountDetailsPage } from "../pages/account-details-page";
 import { ComingSoonPage } from "../pages/coming-soon-page";
 import { MorePage } from "../pages/more-page";
+import { LoginPage } from "../pages/login-page";
+import { RegisterPage } from "../pages/register-page";
+import { WelcomePage } from "../pages/welcome-page";
 
 // Pages déjà développées : elles n'affichent plus « À venir »
 const IMPLEMENTED_ROUTES = ["/dashboard", "/accounts"];
@@ -19,12 +23,15 @@ const placeholderRoutes = NAV_ITEMS
   }));
 
 export const router = createBrowserRouter([
-  { path: "/", element: <Navigate to="/dashboard" replace /> },
+  { path: "/", element: <WelcomePage /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
   {
-    element: <AppShell />,
+    element: <RequireAuth><AppShell /></RequireAuth>,
     children: [
       { path: "dashboard", element: <OverviewPage /> },
       { path: "accounts", element: <AccountsPage /> },
+      { path: "accounts/:id", element: <AccountDetailsPage /> },
       ...placeholderRoutes,
       { path: "more", element: <MorePage /> },
       { path: "*", element: <ComingSoonPage title="Page introuvable (404)" /> },

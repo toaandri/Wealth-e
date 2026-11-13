@@ -1,0 +1,41 @@
+import React from 'react';
+import DemoHomeScreen from '../screens/DemoHomeScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import LoginScreen from '../screens/LoginScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
+import DashboardScreen from '../screens/DashboardScreen';
+import PortfoliosScreen from '../screens/PortfoliosScreen';
+import PortfolioDetailScreen from '../screens/PortfolioDetailScreen';
+import AccountsScreen from '../screens/AccountsScreen';
+import AccountDetailScreen from '../screens/AccountDetailScreen';
+import TransactionsScreen from '../screens/TransactionsScreen';
+import NewTransactionScreen from '../screens/NewTransactionScreen';
+import InternalTransferScreen from '../screens/InternalTransferScreen';
+import BudgetsScreen from '../screens/BudgetsScreen';
+import ImportCSVScreen from '../screens/ImportCSVScreen';
+import SimulatedConnectionsScreen from '../screens/SimulatedConnectionsScreen';
+import InvestmentsScreen from '../screens/InvestmentsScreen';
+import PositionDetailScreen from '../screens/PositionDetailScreen';
+import TradeScreen from '../screens/TradeScreen';
+import RealEstateScreen from '../screens/RealEstateScreen';
+import PropertyDetailScreen from '../screens/PropertyDetailScreen';
+import LoansScreen from '../screens/LoansScreen';
+import LoanDetailScreen from '../screens/LoanDetailScreen';
+import AnalyticsScreen from '../screens/AnalyticsScreen';
+import CashFlowScreen from '../screens/CashFlowScreen';
+import ScenariosScreen from '../screens/ScenariosScreen';
+import ReportsScreen from '../screens/ReportsScreen';
+import DemoPlansScreen from '../screens/DemoPlansScreen';
+import ProfilePreferencesScreen from '../screens/ProfilePreferencesScreen';
+import AssistantScreen from '../screens/AssistantScreen';
+import AIExplanationScreen from '../screens/AIExplanationScreen';
+import NaturalLanguageScenarioScreen from '../screens/NaturalLanguageScenarioScreen';
+import EducationalSearchScreen from '../screens/EducationalSearchScreen';
+import AlertsScreen from '../screens/AlertsScreen';
+import OfflineScreen from '../screens/OfflineScreen';
+
+export const screenComponents = [DemoHomeScreen, RegisterScreen, LoginScreen, OnboardingScreen, DashboardScreen, PortfoliosScreen, PortfolioDetailScreen, AccountsScreen, AccountDetailScreen, TransactionsScreen, NewTransactionScreen, InternalTransferScreen, BudgetsScreen, ImportCSVScreen, SimulatedConnectionsScreen, InvestmentsScreen, PositionDetailScreen, TradeScreen, RealEstateScreen, PropertyDetailScreen, LoansScreen, LoanDetailScreen, AnalyticsScreen, CashFlowScreen, ScenariosScreen, ReportsScreen, DemoPlansScreen, ProfilePreferencesScreen, AssistantScreen, AIExplanationScreen, NaturalLanguageScenarioScreen, EducationalSearchScreen, AlertsScreen, OfflineScreen] as const;
+export function ScreenRouter({ page }: { page: number }) {
+ const Screen = screenComponents[page];
+ return <Screen />;
+}

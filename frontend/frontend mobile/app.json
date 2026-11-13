@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Wealth-e",
+    "slug": "wealth-e-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": { "supportsTablet": true },
+    "android": { "package": "com.wealthe.mobile" },
+    "web": { "bundler": "metro" }
+  }
+}

@@ -1,0 +1,40 @@
+# Dependencies and Expo local state
+node_modules/
+.expo/
+.expo-shared/
+
+# Generated bundles, builds and test reports
+dist/
+web-build/
+build/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.eslintcache
+.metro-health-check*
+
+# Local environment and secrets (only the template is committed)
+.env
+.env.*
+!.env.example
+credentials.json
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+
+# Logs and generated PDF previews / screenshots
+*.log
+design/**/*.png
+
+# OS and editor temporary files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~

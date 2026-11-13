@@ -1,0 +1,69 @@
+
+--- PAGE 1 ---
+WEALTH-E | MOBILE | 01/34 | Accueil démo
+--- PAGE 2 ---
+WEALTH-E | MOBILE | 02/34 | Inscription
+--- PAGE 3 ---
+WEALTH-E | MOBILE | 03/34 | Connexion
+--- PAGE 4 ---
+WEALTH-E | MOBILE | 04/34 | Onboarding
+--- PAGE 5 ---
+WEALTH-E | MOBILE | 05/34 | Tableau de bord
+--- PAGE 6 ---
+WEALTH-E | MOBILE | 06/34 | Portefeuilles
+--- PAGE 7 ---
+WEALTH-E | MOBILE | 07/34 | Détail portefeuille
+--- PAGE 8 ---
+WEALTH-E | MOBILE | 08/34 | Comptes
+--- PAGE 9 ---
+WEALTH-E | MOBILE | 09/34 | Détail compte
+--- PAGE 10 ---
+WEALTH-E | MOBILE | 10/34 | Transactions
+--- PAGE 11 ---
+WEALTH-E | MOBILE | 11/34 | Nouvelle transaction
+--- PAGE 12 ---
+WEALTH-E | MOBILE | 12/34 | Transfert interne
+--- PAGE 13 ---
+WEALTH-E | MOBILE | 13/34 | Budgets
+--- PAGE 14 ---
+WEALTH-E | MOBILE | 14/34 | Import CSV
+--- PAGE 15 ---
+WEALTH-E | MOBILE | 15/34 | Connexions simulées
+--- PAGE 16 ---
+WEALTH-E | MOBILE | 16/34 | Investissements
+--- PAGE 17 ---
+WEALTH-E | MOBILE | 17/34 | Détail position
+--- PAGE 18 ---
+WEALTH-E | MOBILE | 18/34 | Acheter / Vendre
+--- PAGE 19 ---
+WEALTH-E | MOBILE | 19/34 | Immobilier
+--- PAGE 20 ---
+WEALTH-E | MOBILE | 20/34 | Détail bien
+--- PAGE 21 ---
+WEALTH-E | MOBILE | 21/34 | Dettes & prêts
+--- PAGE 22 ---
+WEALTH-E | MOBILE | 22/34 | Détail prêt
+--- PAGE 23 ---
+WEALTH-E | MOBILE | 23/34 | Analyses
+--- PAGE 24 ---
+WEALTH-E | MOBILE | 24/34 | Flux de trésorerie
+--- PAGE 25 ---
+WEALTH-E | MOBILE | 25/34 | Scénarios
+--- PAGE 26 ---
+WEALTH-E | MOBILE | 26/34 | Rapports
+--- PAGE 27 ---
+WEALTH-E | MOBILE | 27/34 | Plans démo
+--- PAGE 28 ---
+WEALTH-E | MOBILE | 28/34 | Profil & préférences
+--- PAGE 29 ---
+WEALTH-E | MOBILE | 29/34 | Assistant IA
+--- PAGE 30 ---
+WEALTH-E | MOBILE | 30/34 | Explication IA
+--- PAGE 31 ---
+WEALTH-E | MOBILE | 31/34 | Scénario en langage naturel
+--- PAGE 32 ---
+WEALTH-E | MOBILE | 32/34 | Recherche éducative RAG
+--- PAGE 33 ---
+WEALTH-E | MOBILE | 33/34 | Notifications & alertes
+--- PAGE 34 ---
+WEALTH-E | MOBILE | 34/34 | Mode hors-ligne

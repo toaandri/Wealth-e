@@ -19,11 +19,33 @@ class AIConversationServiceTest {
     }
 
     @Test
-    void testProcessAndRecord() {
+    void testCreateConversationWithNullTitle() {
+        AIConversationService service = new AIConversationService();
+        
+        ChatConversation conversation = service.createConversation(UUID.randomUUID(), null);
+        
+        assertNotNull(conversation.getId());
+        assertNull(conversation.getTitle());
+        assertNotNull(conversation.getCreatedAt());
+        assertTrue(conversation.isActive());
+    }
+
+    @Test
+    void testUpdateConversation() {
+        AIConversationService service = new AIConversationService();
+        
+        ChatConversation conversation = service.createConversation(UUID.randomUUID(), "Original");
+        service.updateConversation(conversation);
+        
+        assertNotNull(conversation.getUpdatedAt());
+    }
+
+    @Test
+    void testProcessAndRecordWithMessage() {
         AIConversationService service = new AIConversationService();
         
         ChatRequest request = new ChatRequest();
-        request.setMessage("Test message");
+        request.setMessage("Test message for processing");
         
         ChatResponse response = service.processAndRecord(request, null);
         

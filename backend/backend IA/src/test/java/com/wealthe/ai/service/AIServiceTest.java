@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AIServiceTest {
 
     @Test
-    void testProcessChatWithMockProvider() {
+    void testProcessChatWithMockProviderEnabled() {
         AiProperties properties = new AiProperties();
         properties.setEnabled(true);
         
@@ -37,5 +37,22 @@ class AIServiceTest {
         
         assertFalse(response.isAiEnabled());
         assertTrue(response.getContent().contains("AI is disabled"));
+    }
+
+    @Test
+    void testProcessChatWithCustomModel() {
+        AiProperties properties = new AiProperties();
+        properties.setEnabled(true);
+        properties.setModelName("custom-model");
+        
+        AIService service = new AIService(new MockAiProvider(properties), properties);
+        
+        ChatRequest request = new ChatRequest();
+        request.setMessage("Test message");
+        request.setModelOverride("override-model");
+        
+        ChatResponse response = service.processChat(request);
+        
+        assertTrue(response.getContent().contains("override-model"));
     }
 }

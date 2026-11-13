@@ -12,19 +12,43 @@ class AIKnowledgeServiceTest {
         KnowledgeSearchRequest request = new KnowledgeSearchRequest();
         request.setQuery("");
         
-        // This should not throw exception
         var results = service.search(request);
         
-        // Should return empty or default list
         assertNotNull(results);
     }
 
     @Test
-    void testSearchWithQuery() {
+    void testSearchWithNonEmptyQuery() {
         AIKnowledgeService service = new AIKnowledgeService();
         
         KnowledgeSearchRequest request = new KnowledgeSearchRequest();
         request.setQuery("test query");
+        
+        var results = service.search(request);
+        
+        assertNotNull(results);
+    }
+
+    @Test
+    void testSearchWithLimit() {
+        AIKnowledgeService service = new AIKnowledgeService();
+        
+        KnowledgeSearchRequest request = new KnowledgeSearchRequest();
+        request.setQuery("test");
+        request.setLimit(5);
+        
+        var results = service.search(request);
+        
+        assertNotNull(results);
+    }
+
+    @Test
+    void testSearchWithPortfolioId() {
+        AIKnowledgeService service = new AIKnowledgeService();
+        
+        KnowledgeSearchRequest request = new KnowledgeSearchRequest();
+        request.setQuery("test");
+        request.setPortfolioId(UUID.randomUUID());
         
         var results = service.search(request);
         

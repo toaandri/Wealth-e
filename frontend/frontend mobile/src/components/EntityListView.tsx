@@ -7,7 +7,7 @@ import { screens } from '../navigation/routes';
 import { useWealth } from '../state/WealthContext';
 import { today } from '../utils/format';
 export function EntityListView() {
- const { store, page, query, setQuery, filter, setFilter, showFilter, setShowFilter, selected, setSelected, editor, t, fmt, go, update, amount, field, pick, exportRows, link, actions, getRows, addEntry, saveEntry } = useWealth();
+ const { store, page, query, setQuery, filter, setFilter, showFilter, setShowFilter, selected, setSelected, editor, authSession, t, fmt, go, update, amount, field, pick, exportRows, link, actions, getRows, addEntry, saveEntry } = useWealth();
 
   const all = getRows();
   const rows = all.filter(r => r.cells.join(' ').toLowerCase().includes(query.toLowerCase()) && (filter === 'Tous' || r.cells[2] === filter));
@@ -21,7 +21,7 @@ export function EntityListView() {
    </Card>
    {editor && <Card title="Ajouter un élément">{field('name', page === 12 ? 'Catégorie (ex. Transport)' : 'Nom / libellé')}{field('amount', page === 32 ? 'Seuil (' + store.profile.currency + ')' : 'Montant (' + store.profile.currency + ')', true)}{[20, 21].includes(page) && field('year', 'Année d’échéance', true)}{[5, 6, 7].includes(page) && pick('kind', ['Courant', 'Épargne', 'Courtage'])}{actions(saveEntry)}</Card>}
    {page === 12 && <Card title="Suivi des budgets">{store.budgets.map(b => { const spent = -store.transactions.filter(v => v.category === b.name && v.amount < 0 && v.date.slice(0, 7) === today().slice(0, 7)).reduce((a, v) => a + v.amount, 0); return <View key={b.id} style={{ marginBottom: 16 }}><View style={styles.between}><Text style={styles.label}>{b.name}</Text><Text style={styles.tiny}>{Math.round(spent / b.limit * 100)} %</Text></View><View style={styles.track}><View style={{ width: `${Math.min(spent / b.limit * 100, 100)}%`, height: 6, backgroundColor: spent > b.limit ? C.red : C.teal, borderRadius: 3 }} /></View><Text style={styles.body}>{fmt(spent)} / {fmt(b.limit)}</Text></View>; })}<Text style={styles.tiny}>Opérations du mois en cours, hors transferts internes.</Text></Card>}
-   <View style={styles.summary}><Card title="Résumé"><Text style={styles.statValue}>{fmt([20, 21].includes(page) ? t.debt : page === 8 ? store.accounts.find(a => a.id === selected)?.balance ?? store.accounts[0].balance : t.net)}</Text><Text style={styles.body}>Valeurs fictives pour la présentation.</Text><View style={styles.notice}><Text style={styles.noticeText}>Source : DEMO{ '\n' }Mis à jour : {new Date(store.updatedAt).toLocaleDateString('fr-FR')}</Text></View></Card></View>
+   <View style={styles.summary}><Card title="Résumé"><Text style={styles.statValue}>{fmt([20, 21].includes(page) ? t.debt : page === 8 ? store.accounts.find(a => a.id === selected)?.balance ?? store.accounts[0]?.balance ?? 0 : t.net)}</Text><Text style={styles.body}>{authSession && [7, 8, 9].includes(page) ? 'Données synchronisées avec votre compte.' : 'Valeurs de démonstration pour la présentation.'}</Text><View style={styles.notice}><Text style={styles.noticeText}>Source : {authSession && [7, 8, 9].includes(page) ? 'API Wealth-e' : 'DEMO'}{ '\n' }Mis à jour : {new Date(store.updatedAt).toLocaleDateString('fr-FR')}</Text></View></Card></View>
    <Chart />
    {page === 5 && link('Voir les comptes', 7)}{[7, 8].includes(page) && <Card title="Opérations">{link('Transactions', 9)}{link('Transfert interne', 11)}{link('Budgets', 12)}{link('Importer un CSV', 13)}{link('Connexions simulées', 14)}</Card>}
    {[15, 16].includes(page) && link('Acheter / Vendre', 17)}{page === 18 && link('Dettes & prêts', 20)}
@@ -30,4 +30,3 @@ export function EntityListView() {
    {page === 32 && <Text style={styles.body}>Touchez une alerte pour l’activer ou la désactiver. Les alertes restent dans l’application.</Text>}
   </>;
  }
-

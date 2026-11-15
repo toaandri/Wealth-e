@@ -1,6 +1,6 @@
 import type { Account } from "./accounts.types";
 
-// Données de démonstration encore utilisées par la page Transactions.
+// Fixture utilisée par les écrans de démonstration.
 export const accountsDemoData: { accounts: Account[] } = {
   accounts: [
     {
@@ -9,6 +9,7 @@ export const accountsDemoData: { accounts: Account[] } = {
       type: "checking",
       balance: 2_450_000,
       currency: "MGA",
+      userId: 1,
     },
     {
       id: "demo-savings",
@@ -16,6 +17,7 @@ export const accountsDemoData: { accounts: Account[] } = {
       type: "savings",
       balance: 3_800_000,
       currency: "MGA",
+      userId: 1,
     },
     {
       id: "demo-mobile-money",
@@ -23,6 +25,7 @@ export const accountsDemoData: { accounts: Account[] } = {
       type: "mobile_money",
       balance: 650_000,
       currency: "MGA",
+      userId: 1,
     },
     {
       id: "demo-cash",
@@ -30,6 +33,7 @@ export const accountsDemoData: { accounts: Account[] } = {
       type: "cash",
       balance: 300_000,
       currency: "MGA",
+      userId: 1,
     },
   ],
 };

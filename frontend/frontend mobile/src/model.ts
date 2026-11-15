@@ -8,7 +8,7 @@ export type Store = {
  loans: { id: string; name: string; balance: number; year: number }[];
  budgets: { id: string; name: string; limit: number }[];
  alerts: { id: string; name: string; threshold: number; enabled: boolean }[];
- plan: string; connected: boolean; offline: boolean; updatedAt: string;
+ plan: string; connected: boolean; offline: boolean; updatedAt: string; remoteUserId?: number;
 };
 export const initialStore: Store = {
  profile: { name: 'Alex', email: 'alex@exemple.com', currency: 'Ar' },

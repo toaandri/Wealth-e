@@ -96,5 +96,11 @@ export const transactionsDemoData: TransactionsResponse = {
       status: "posted",
     },
   ],
+  accountNames: {
+    "demo-checking": "Compte courant",
+    "demo-savings": "Livret d'épargne",
+    "demo-mobile-money": "Portefeuille mobile",
+    "demo-cash": "Espèces",
+  },
   isDemo: true,
 };

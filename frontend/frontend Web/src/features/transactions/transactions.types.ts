@@ -9,7 +9,7 @@ export type Transaction = {
   description: string;          // ex. « Salaire novembre »
   kind: TransactionKind;
   amount: number;               // toujours positif : le sens est donné par "kind"
-  currency: "MGA";
+  currency: string;
   accountId: string;            // compte concerné (ou compte de départ pour un transfert)
   toAccountId: string | null;   // compte d'arrivée, seulement pour un transfert
   category: string | null;      // null = non catégorisée → affichée « — »
@@ -17,14 +17,15 @@ export type Transaction = {
 };
 
 export type TransactionsSummary = {
-  periodLabel: string;          // ex. « Novembre 2026 »
-  totalIncome: number | null;   // calculé par le BACKEND, transferts exclus
-  totalExpenses: number | null; // calculé par le BACKEND, transferts exclus
-  netCashFlow: number | null;   // revenus − dépenses, calculé par le BACKEND
+  periodLabel: string;          // mois civil courant
+  totalIncome: number | null;   // calculé depuis les opérations REST, transferts exclus
+  totalExpenses: number | null; // calculé depuis les opérations REST, transferts exclus
+  netCashFlow: number | null;   // revenus − dépenses
 };
 
 export type TransactionsResponse = {
   summary: TransactionsSummary;
   transactions: Transaction[];
+  accountNames: Record<string, string>;
   isDemo: boolean;
 };

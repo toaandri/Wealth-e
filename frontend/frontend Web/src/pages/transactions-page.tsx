@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { DemoDataBadge } from "../components/demo-data-badge";
 import { MoneyValue } from "../components/money-value";
 import { LoadingSkeleton } from "../components/loading-skeleton";
 import { EmptyState } from "../components/empty-state";
 import { ErrorState } from "../components/error-state";
-import { transactionsDemoData } from "../features/transactions/transactions.demo";
-import { accountsDemoData } from "../features/accounts/accounts.demo";
+import { getTransactions } from "../features/transactions/transactions.api";
 import type { Transaction, TransactionKind } from "../features/transactions/transactions.types";
+import { getAuthSession } from "../lib/auth-session";
 
 type Filter = "all" | TransactionKind;
 
@@ -18,43 +17,56 @@ const FILTERS: { value: Filter; label: string }[] = [
   { value: "transfer", label: "Transferts" },
 ];
 
-// Affichage de chaque type d'opération
 const KIND_DISPLAY: Record<TransactionKind, { sign: string; label: string; className: string }> = {
   income: { sign: "+", label: "Revenu", className: "tx-amount--income" },
   expense: { sign: "−", label: "Dépense", className: "tx-amount--expense" },
   transfer: { sign: "⇄", label: "Transfert interne", className: "tx-amount--transfer" },
 };
 
-// Les dates sont au format "AAAA-MM-JJ" : on les lit en UTC pour éviter un décalage d'un jour
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
-
-// Nom des comptes à partir de leur identifiant
-const accountNames = new Map(accountsDemoData.accounts.map((account) => [account.id, account.name]));
-
-function accountName(id: string) {
-  return accountNames.get(id) ?? "Compte inconnu";
-}
-
-function accountLabel(transaction: Transaction) {
-  if (transaction.kind === "transfer" && transaction.toAccountId) {
-    return `${accountName(transaction.accountId)} → ${accountName(transaction.toAccountId)}`;
-  }
-  return accountName(transaction.accountId);
-}
 
 export function TransactionsPage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getTransactions>> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const session = getAuthSession();
+  const userId = session?.user.id;
+  const currency = session?.user.currency ?? "MGA";
 
-  // Test des états via l'adresse (?state=loading|empty|error), en développement uniquement
   const demoState = import.meta.env.DEV ? searchParams.get("state") : null;
 
-  const data = transactionsDemoData;
-  const transactions = demoState === "empty" ? [] : data.transactions;
+  useEffect(() => {
+    if (!userId) {
+      setIsLoading(false);
+      setError("Reconnectez-vous pour consulter vos transactions.");
+      return;
+    }
 
-  // Filtre d'AFFICHAGE uniquement : les totaux restent ceux du backend
-  const visibleTransactions =
-    filter === "all" ? transactions : transactions.filter((tx) => tx.kind === filter);
+    let active = true;
+    setIsLoading(true);
+    setError("");
+    getTransactions(userId, currency)
+      .then((response) => { if (active) setData(response); })
+      .catch((requestError: unknown) => {
+        if (active) setError(requestError instanceof Error ? requestError.message : "Le chargement des transactions a échoué.");
+      })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
+  }, [userId, currency, refreshKey]);
+
+  const transactions = demoState === "empty" ? [] : data?.transactions ?? [];
+  const visibleTransactions = filter === "all" ? transactions : transactions.filter((tx) => tx.kind === filter);
+  const accountLabel = (transaction: Transaction) => {
+    const source = data?.accountNames[transaction.accountId] ?? "Compte inconnu";
+    if (transaction.kind === "transfer" && transaction.toAccountId) {
+      const destination = data?.accountNames[transaction.toAccountId] ?? "Compte inconnu";
+      return `${source} → ${destination}`;
+    }
+    return source;
+  };
 
   function renderList() {
     if (visibleTransactions.length === 0) {
@@ -79,11 +91,10 @@ export function TransactionsPage() {
                 </p>
                 <p className="item-card__meta">{accountLabel(tx)}</p>
               </div>
-
               <div className="item-card__side">
                 <p className={`tx-amount ${display.className}`}>
                   <span aria-hidden="true">{display.sign} </span>
-                  <MoneyValue amount={tx.amount} />
+                  <MoneyValue amount={tx.amount} currency={tx.currency} />
                 </p>
               </div>
             </li>
@@ -94,30 +105,25 @@ export function TransactionsPage() {
   }
 
   function renderContent() {
-    if (demoState === "loading") {
-      return (
-        <div className="card">
-          <LoadingSkeleton lines={6} label="Chargement des transactions…" />
-        </div>
-      );
+    if (isLoading || demoState === "loading") {
+      return <div className="card"><LoadingSkeleton lines={6} label="Chargement des transactions…" /></div>;
     }
 
-    if (demoState === "error") {
+    if (demoState === "error" || error) {
       return (
         <ErrorState
           title="Impossible de charger vos transactions"
-          onRetry={() => setSearchParams({})}
+          message={demoState === "error" ? undefined : error}
+          onRetry={() => {
+            if (demoState === "error") setSearchParams({});
+            setRefreshKey((key) => key + 1);
+          }}
         />
       );
     }
 
-    if (transactions.length === 0) {
-      return (
-        <EmptyState
-          title="Aucune transaction pour l'instant"
-          message="Les opérations de vos comptes de démonstration apparaîtront ici."
-        />
-      );
+    if (!data || transactions.length === 0) {
+      return <EmptyState title="Aucune transaction pour l'instant" message="Les opérations enregistrées dans votre espace apparaîtront ici." />;
     }
 
     return (
@@ -125,25 +131,21 @@ export function TransactionsPage() {
         <section className="summary-grid" aria-label={`Totaux de ${data.summary.periodLabel}`}>
           <article className="card summary-card">
             <p className="summary-card__label">Revenus</p>
-            <MoneyValue amount={data.summary.totalIncome} className="summary-card__value" />
+            <MoneyValue amount={data.summary.totalIncome} currency={currency} className="summary-card__value" />
           </article>
           <article className="card summary-card">
             <p className="summary-card__label">Dépenses</p>
-            <MoneyValue amount={data.summary.totalExpenses} className="summary-card__value" />
+            <MoneyValue amount={data.summary.totalExpenses} currency={currency} className="summary-card__value" />
           </article>
           <article className="card summary-card">
             <p className="summary-card__label">Solde net</p>
-            <MoneyValue amount={data.summary.netCashFlow} className="summary-card__value" />
+            <MoneyValue amount={data.summary.netCashFlow} currency={currency} className="summary-card__value" />
           </article>
         </section>
 
-        <p className="page-note">
-          Les transferts internes et les opérations en attente ne sont pas comptés dans les totaux.
-        </p>
-
+        <p className="page-note">Les transferts internes et les opérations en attente ne sont pas comptés dans les totaux.</p>
         <section aria-labelledby="tx-list-title">
           <h2 id="tx-list-title" className="section-title">Opérations</h2>
-
           <div className="filter-group" role="group" aria-label="Filtrer par type d'opération">
             {FILTERS.map((item) => (
               <button
@@ -157,7 +159,6 @@ export function TransactionsPage() {
               </button>
             ))}
           </div>
-
           {renderList()}
         </section>
       </>
@@ -170,11 +171,9 @@ export function TransactionsPage() {
         <div>
           <p className="page-breadcrumb">Patrimoine / Transactions</p>
           <h1>Transactions</h1>
-          <p className="page-subtitle">{data.summary.periodLabel}</p>
+          <p className="page-subtitle">{data?.summary.periodLabel ?? "Transactions du compte"}</p>
         </div>
-        {data.isDemo ? <DemoDataBadge /> : null}
       </header>
-
       {renderContent()}
     </div>
   );

@@ -11,17 +11,18 @@ type Icon = React.ComponentProps<typeof Ionicons>['name'];
 export default function App() { return <SafeAreaProvider><WealthApp /></SafeAreaProvider>; }
 function WealthApp() {
  const controller = useWealthController();
- const { store, ready, storageError, page, menu, setMenu, toast, setToast, scroll, go, link } = controller;
+ const { store, ready, storageError, syncError, retrySync, authSession, page, menu, setMenu, toast, setToast, scroll, go, link } = controller;
  const readOnlyPage = store.offline && [1, 2, 3, 10, 11, 13, 14, 17, 26].includes(page);
  if (!ready) return <SafeAreaView style={[styles.safe, { justifyContent: 'center', alignItems: 'center' }]}><ActivityIndicator color={C.teal} /><Text style={styles.body}>Chargement de Wealth-e…</Text></SafeAreaView>;
  return <WealthContext.Provider value={controller}><SafeAreaView style={styles.safe}><StatusBar barStyle="dark-content" /><View style={styles.shell}>
-  <View style={styles.header}><Pressable accessibilityRole="button" accessibilityLabel="Accueil Wealth-e" onPress={() => go(0)}><Text style={styles.logo}>◆ WEALTH-E</Text></Pressable><View style={styles.wrap}><View style={styles.badge}><Text style={styles.badgeText}>DEMO DATA</Text></View><Pressable accessibilityRole="button" accessibilityLabel="Toutes les pages dans l’ordre du PDF" onPress={() => setMenu(true)} hitSlop={12}><Ionicons name="grid-outline" color={C.ink} size={21} /></Pressable></View></View>
+  <View style={styles.header}><Pressable accessibilityRole="button" accessibilityLabel="Accueil Wealth-e" onPress={() => go(0)}><Text style={styles.logo}>◆ WEALTH-E</Text></Pressable><View style={styles.wrap}><View style={styles.badge}><Text style={styles.badgeText}>{authSession ? 'COMPTE CONNECTÉ' : 'DEMO DATA'}</Text></View><Pressable accessibilityRole="button" accessibilityLabel="Toutes les pages dans l’ordre du PDF" onPress={() => setMenu(true)} hitSlop={12}><Ionicons name="grid-outline" color={C.ink} size={21} /></Pressable></View></View>
   {!!storageError && <Text style={styles.error}>{storageError}</Text>}
+  {!!syncError && <View style={styles.notice}><Text style={styles.noticeText}>{syncError}</Text><Button title="Réessayer la synchronisation" secondary onPress={() => { void retrySync(); }} /></View>}
   {store.offline && <Pressable onPress={() => go(33)} style={styles.offline}><Text style={styles.noticeText}>Hors-ligne · lecture seule · gérer</Text></Pressable>}
   <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
    <View style={styles.pageHeading}><View style={styles.between}><Text style={styles.eyebrow}>{screens[page][1].toUpperCase()}</Text><Text style={styles.tiny}>{String(page + 1).padStart(2, '0')}/34</Text></View><Text style={styles.title}>{screens[page][0]}</Text><Text style={styles.body}>{screens[page][2]}</Text></View>
    {readOnlyPage ? <Card title="Consultation hors-ligne"><Text style={styles.body}>Désactivez le mode lecture seule pour utiliser ce formulaire.</Text>{link('Gérer le mode hors-ligne', 33)}</Card> : <ScreenRouter page={page} />}
-   <Text style={styles.footer}>WEALTH-E · Maquette UI/UX conceptuelle · Données 100 % synthétiques · Pas de conseil financier.</Text>
+   <Text style={styles.footer}>WEALTH-E · Comptes et transactions synchronisés après connexion · Les autres modules peuvent rester en démonstration. Pas de conseil financier.</Text>
    <View style={styles.between}><Button title="‹ Précédent" secondary disabled={page === 0} onPress={() => go(page - 1)} /><Text style={styles.tiny}>{page + 1} / 34</Text><Button title="Suivant ›" secondary disabled={page === 33} onPress={() => go(page + 1)} /></View>
   </ScrollView></KeyboardAvoidingView>
   {!!toast && <Pressable accessibilityLiveRegion="polite" onPress={() => setToast('')} style={styles.toast}><Text style={{ color: C.white, fontSize: 13 }}>{toast}</Text></Pressable>}
@@ -30,4 +31,3 @@ function WealthApp() {
  <Modal visible={menu} animationType="slide" onRequestClose={() => setMenu(false)}><SafeAreaView style={styles.safe}><View style={styles.shell}><View style={styles.header}><Text style={styles.title}>Les 34 pages</Text><Pressable accessibilityRole="button" accessibilityLabel="Fermer le menu" onPress={() => setMenu(false)} hitSlop={15}><Ionicons name="close" size={26} color={C.ink} /></Pressable></View><ScrollView contentContainerStyle={styles.content}><Text style={styles.body}>Parcours dans l’ordre de la maquette PDF</Text>{groups.map(group => <View key={group.title} style={{ marginTop: 22 }}><Text style={styles.eyebrow}>{group.title.toUpperCase()}</Text>{group.pages.map(n => <Pressable accessibilityRole="button" key={n} onPress={() => go(n)} style={[styles.menuRow, n === page && { backgroundColor: C.pale }]}><Text style={[styles.menuNumber, n === page && { color: C.teal }]}>{String(n + 1).padStart(2, '0')}</Text><Text style={[styles.linkText, { flex: 1 }]}>{screens[n][0]}</Text><Ionicons name="chevron-forward" size={16} color={C.teal} /></Pressable>)}</View>)}</ScrollView></View></SafeAreaView></Modal>
  </SafeAreaView></WealthContext.Provider>;
 }
-

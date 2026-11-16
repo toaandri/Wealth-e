@@ -1,8 +1,12 @@
 package com.wealthe.ai.service;
 
+import com.wealthe.ai.config.AiProperties;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.of;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import java.util.stream.Stream;
 
 class MockAiProviderTest {
@@ -46,11 +50,11 @@ class MockAiProviderTest {
         assertTrue(response.contains(model));
     }
 
-    static Stream<of> provideModelAndPromptCombinations() {
+    static Stream<Arguments> provideModelAndPromptCombinations() {
         return Stream.of(
-            of("gpt-4", "Hello world", 512, 0.5),
-            of("claude-3", "Complex prompt with unicode: éàù", 2048, 0.8),
-            of("llama2", "", 4096, 1.0)
+            arguments("gpt-4", "Hello world", 512, 0.5),
+            arguments("claude-3", "Complex prompt with unicode: éàù", 2048, 0.8),
+            arguments("llama2", "", 4096, 1.0)
         );
     }
 }

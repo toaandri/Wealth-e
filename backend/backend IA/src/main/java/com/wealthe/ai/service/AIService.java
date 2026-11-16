@@ -1,5 +1,6 @@
 package com.wealthe.ai.service;
 
+import com.wealthe.ai.config.AiProperties;
 import com.wealthe.ai.dto.ChatRequest;
 import com.wealthe.ai.dto.ChatResponse;
 import com.wealthe.ai.domain.ChatConversation;

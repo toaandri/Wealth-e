@@ -1,13 +1,26 @@
 package com.wealthe.ai.service;
 
+import com.wealthe.ai.config.AiProperties;
+import com.wealthe.ai.domain.ChatConversation;
+import com.wealthe.ai.dto.ChatRequest;
+import com.wealthe.ai.dto.ChatResponse;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AIConversationServiceTest {
 
+    private AIConversationService createService() {
+        AiProperties properties = new AiProperties();
+        AIService aiService = new AIService((model, prompt, maxTokens, temperature) -> "response", properties);
+        return new AIConversationService(aiService);
+    }
+
     @Test
     void testCreateConversation() {
-        AIConversationService service = new AIConversationService();
+        AIConversationService service = createService();
         
         ChatConversation conversation = service.createConversation(UUID.randomUUID(), "Test Conversation");
         
@@ -20,7 +33,7 @@ class AIConversationServiceTest {
 
     @Test
     void testCreateConversationWithNullTitle() {
-        AIConversationService service = new AIConversationService();
+        AIConversationService service = createService();
         
         ChatConversation conversation = service.createConversation(UUID.randomUUID(), null);
         
@@ -32,7 +45,7 @@ class AIConversationServiceTest {
 
     @Test
     void testUpdateConversation() {
-        AIConversationService service = new AIConversationService();
+        AIConversationService service = createService();
         
         ChatConversation conversation = service.createConversation(UUID.randomUUID(), "Original");
         service.updateConversation(conversation);
@@ -42,7 +55,7 @@ class AIConversationServiceTest {
 
     @Test
     void testProcessAndRecordWithMessage() {
-        AIConversationService service = new AIConversationService();
+        AIConversationService service = createService();
         
         ChatRequest request = new ChatRequest();
         request.setMessage("Test message for processing");

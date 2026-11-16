@@ -5,10 +5,10 @@ import com.wealthe.ai.dto.KnowledgeSearchResult;
 import com.wealthe.ai.domain.KnowledgeChunk;
 import com.wealthe.ai.domain.KnowledgeDocument;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +21,11 @@ import java.util.UUID;
 @Transactional
 public class AIKnowledgeService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    public AIKnowledgeService(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     public List<KnowledgeSearchResult> search(KnowledgeSearchRequest request) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -43,13 +46,9 @@ public class AIKnowledgeService {
         query.select(root);
         query.orderBy(cb.desc(root.get("createdAt")));
 
-        if (request.getLimit() > 0) {
-            query.setMaxResults(request.getLimit());
-        } else {
-            query.setMaxResults(10);
-        }
-
-        List<KnowledgeChunk> results = entityManager.createQuery(query).getResultList();
+        TypedQuery<KnowledgeChunk> typedQuery = entityManager.createQuery(query);
+        typedQuery.setMaxResults(request.getLimit() > 0 ? request.getLimit() : 10);
+        List<KnowledgeChunk> results = typedQuery.getResultList();
 
         List<KnowledgeSearchResult> response = new ArrayList<>();
         for (KnowledgeChunk chunk : results) {
@@ -64,7 +63,9 @@ public class AIKnowledgeService {
             KnowledgeDocument doc = chunk.getDocument();
             if (doc != null) {
                 result.setTitle(doc.getTitle());
-                result.setSourceType(doc.getSource() != null ? KnowledgeDocument.SourceType.valueOf(doc.getSource().toUpperCase()) : KnowledgeDocument.SourceType.CURATED);
+                result.setSourceType(doc.getSource() != null
+                        ? com.wealthe.ai.dto.KnowledgeDocument.SourceType.valueOf(doc.getSource().toUpperCase())
+                        : com.wealthe.ai.dto.KnowledgeDocument.SourceType.CURATED);
             }
 
             response.add(result);
@@ -75,6 +76,8 @@ public class AIKnowledgeService {
 
     public KnowledgeDocument saveDocument(KnowledgeDocument document) {
         document.setCreatedAt(Instant.now());
-        return document; // EntityManager would persist in real app
+        document.setUpdatedAt(Instant.now());
+        entityManager.persist(document);
+        return document;
     }
 }

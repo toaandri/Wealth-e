@@ -4,6 +4,7 @@ import com.wealthe.dto.request.LoginRequest;
 import com.wealthe.dto.request.RegisterRequest;
 import com.wealthe.dto.response.AuthResponse;
 import com.wealthe.dto.response.UserResponse;
+import com.wealthe.config.AuthTokenService;
 import com.wealthe.entity.User;
 import com.wealthe.exception.BusinessException;
 import com.wealthe.mapper.UserMapper;
@@ -15,10 +16,12 @@ public class AuthService {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthTokenService tokenService;
 
-    public AuthService(UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthService(UserService userService, PasswordEncoder passwordEncoder, AuthTokenService tokenService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
     }
 
     public UserResponse register(RegisterRequest request) {
@@ -38,6 +41,6 @@ public class AuthService {
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new BusinessException("Invalid credentials");
         }
-        return new AuthResponse("demo-session-" + user.getId(), UserMapper.toResponse(user));
+        return new AuthResponse(tokenService.issue(user.getId()), UserMapper.toResponse(user));
     }
 }

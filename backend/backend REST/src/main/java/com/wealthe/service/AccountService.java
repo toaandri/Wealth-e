@@ -30,8 +30,8 @@ public class AccountService {
                 .toList();
     }
 
-    public AccountResponse findById(Long id) {
-        return AccountMapper.toResponse(getById(id));
+    public AccountResponse findById(Long id, Long userId) {
+        return AccountMapper.toResponse(getByIdForUser(id, userId));
     }
 
     public AccountResponse create(CreateAccountRequest request) {
@@ -45,8 +45,8 @@ public class AccountService {
         return AccountMapper.toResponse(accountRepository.save(account));
     }
 
-    public AccountResponse update(Long id, UpdateAccountRequest request) {
-        Account account = getById(id);
+    public AccountResponse update(Long id, UpdateAccountRequest request, Long userId) {
+        Account account = getByIdForUser(id, userId);
         account.setName(request.name());
         account.setType(request.type());
         if (request.currency() != null) {
@@ -55,16 +55,19 @@ public class AccountService {
         return AccountMapper.toResponse(accountRepository.save(account));
     }
 
-    public void delete(Long id) {
-        if (!accountRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Account not found");
-        }
-        accountRepository.deleteById(id);
+    public void delete(Long id, Long userId) {
+        accountRepository.delete(getByIdForUser(id, userId));
     }
 
     /** Used by other services that need the JPA entity itself. */
     public Account getById(Long id) {
         return accountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+    }
+
+    public Account getByIdForUser(Long id, Long userId) {
+        Account account = getById(id);
+        ResourceOwnership.requireOwner(userId, account.getUser().getId());
+        return account;
     }
 }

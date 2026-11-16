@@ -20,6 +20,11 @@ Spring Boot REST API for the Wealth-e **Core backend**. The AI backend and front
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 
+Login returns a signed bearer token valid for 12 hours. Send it as
+`Authorization: Bearer <token>` on every API request except health and auth routes.
+User IDs in query parameters and request bodies must match the authenticated user;
+resource IDs are checked for ownership.
+
 ### Accounts
 - `GET /api/accounts?userId=1`
 - `GET /api/accounts/{id}`
@@ -48,7 +53,8 @@ Includes balances, income, expenses, asset/liability totals and module counts.
 - `PUT /api/budgets/{id}`
 - `DELETE /api/budgets/{id}`
 
-Budget responses include `spent` and `remaining` calculated from transactions in the budget date range.
+Budget responses include `spent` and `remaining` calculated from expense transactions
+in the budget's category and date range.
 
 ### Goals
 - `GET /api/goals?userId=1`
@@ -125,6 +131,10 @@ DB_URL=jdbc:mysql://localhost:3306/wealth_e?createDatabaseIfNotExist=true&useSSL
 DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
+
+Configure `APP_AUTH_TOKEN_SECRET` with at least 32 characters for stable signing
+across restarts and deployments. If omitted, the backend generates a random
+in-memory key, so all existing tokens become invalid when it restarts.
 
 ## Important scope
 

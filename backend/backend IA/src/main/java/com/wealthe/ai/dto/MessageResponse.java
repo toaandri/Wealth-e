@@ -1,5 +1,6 @@
 package com.wealthe.ai.dto;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public class MessageResponse {

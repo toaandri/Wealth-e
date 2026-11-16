@@ -1,5 +1,6 @@
 package com.wealthe.ai.dto;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +25,14 @@ class ConversationResponseTest {
         java.time.Instant now = java.time.Instant.now();
         java.util.List<MessageResponse> messages = java.util.Collections.emptyList();
         
-        ConversationResponse response = new ConversationResponse(convId, "Test Title", userId, now, now, true, messages);
+        ConversationResponse response = new ConversationResponse();
+        response.setId(convId);
+        response.setTitle("Test Title");
+        response.setUserId(userId);
+        response.setCreatedAt(now);
+        response.setUpdatedAt(now);
+        response.setActive(true);
+        response.setMessages(messages);
         
         assertEquals(convId, response.getId());
         assertEquals("Test Title", response.getTitle());

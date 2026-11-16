@@ -11,6 +11,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    ResponseEntity<?> notFound(ResourceNotFoundException e) {
+        return ResponseEntity.status(404).body(
+                Map.of("timestamp", Instant.now(), "status", 404, "message", e.getMessage())
+        );
+    }
+
     @ExceptionHandler({BusinessException.class, IllegalArgumentException.class})
     ResponseEntity<?> badRequest(RuntimeException e) {
         return ResponseEntity.badRequest().body(

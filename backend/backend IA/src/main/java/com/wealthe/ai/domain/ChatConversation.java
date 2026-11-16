@@ -1,6 +1,8 @@
 package com.wealthe.ai.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -9,8 +11,8 @@ import java.util.UUID;
 public class ChatConversation {
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
-    @ColumnDefinition(length = 36)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "id", nullable = false, updatable = false, length = 36)
     private UUID id = UUID.randomUUID();
 
     @Column(name = "title")

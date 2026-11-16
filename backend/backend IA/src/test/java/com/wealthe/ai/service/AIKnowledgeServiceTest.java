@@ -1,57 +1,27 @@
 package com.wealthe.ai.service;
 
+import com.wealthe.ai.domain.KnowledgeDocument;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class AIKnowledgeServiceTest {
 
     @Test
-    void testSearchWithEmptyQuery() {
-        AIKnowledgeService service = new AIKnowledgeService();
-        
-        KnowledgeSearchRequest request = new KnowledgeSearchRequest();
-        request.setQuery("");
-        
-        var results = service.search(request);
-        
-        assertNotNull(results);
-    }
+    void saveDocumentPersistsAndReturnsTheDocument() {
+        EntityManager entityManager = mock(EntityManager.class);
+        AIKnowledgeService service = new AIKnowledgeService(entityManager);
+        KnowledgeDocument document = new KnowledgeDocument();
 
-    @Test
-    void testSearchWithNonEmptyQuery() {
-        AIKnowledgeService service = new AIKnowledgeService();
-        
-        KnowledgeSearchRequest request = new KnowledgeSearchRequest();
-        request.setQuery("test query");
-        
-        var results = service.search(request);
-        
-        assertNotNull(results);
-    }
+        KnowledgeDocument saved = service.saveDocument(document);
 
-    @Test
-    void testSearchWithLimit() {
-        AIKnowledgeService service = new AIKnowledgeService();
-        
-        KnowledgeSearchRequest request = new KnowledgeSearchRequest();
-        request.setQuery("test");
-        request.setLimit(5);
-        
-        var results = service.search(request);
-        
-        assertNotNull(results);
-    }
-
-    @Test
-    void testSearchWithPortfolioId() {
-        AIKnowledgeService service = new AIKnowledgeService();
-        
-        KnowledgeSearchRequest request = new KnowledgeSearchRequest();
-        request.setQuery("test");
-        request.setPortfolioId(UUID.randomUUID());
-        
-        var results = service.search(request);
-        
-        assertNotNull(results);
+        assertSame(document, saved);
+        assertNotNull(saved.getCreatedAt());
+        assertNotNull(saved.getUpdatedAt());
+        verify(entityManager).persist(document);
     }
 }

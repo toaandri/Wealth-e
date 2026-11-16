@@ -1,6 +1,8 @@
 package com.wealthe.ai.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -9,13 +11,13 @@ import java.util.UUID;
 public class AIInvocation {
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
-    @ColumnDefinition(length = 36)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "id", nullable = false, updatable = false, length = 36)
     private UUID id = UUID.randomUUID();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "user_id", length = 36)
+    private UUID userId;
 
     @Column(name = "prompt", columnDefinition = "TEXT", nullable = false)
     private String prompt;
@@ -49,12 +51,12 @@ public class AIInvocation {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getPrompt() {

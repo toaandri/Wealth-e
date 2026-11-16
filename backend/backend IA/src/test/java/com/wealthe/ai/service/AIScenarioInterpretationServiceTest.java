@@ -1,5 +1,8 @@
 package com.wealthe.ai.service;
 
+import com.wealthe.ai.dto.ScenarioInterpretRequest;
+import com.wealthe.ai.dto.ScenarioInterpretResponse;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

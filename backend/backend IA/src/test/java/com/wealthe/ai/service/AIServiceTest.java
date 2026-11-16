@@ -1,5 +1,8 @@
 package com.wealthe.ai.service;
 
+import com.wealthe.ai.config.AiProperties;
+import com.wealthe.ai.dto.ChatRequest;
+import com.wealthe.ai.dto.ChatResponse;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -9,23 +9,26 @@ public class TransactionService {
  private final TransactionRepository transactionRepository; private final AccountService accountService;
  public TransactionService(TransactionRepository r,AccountService a){transactionRepository=r;accountService=a;}
  public List<TransactionResponse> findByUser(Long userId){return transactionRepository.findByAccountUserIdOrderByTransactionDateDesc(userId).stream().map(TransactionMapper::toResponse).toList();}
- public List<TransactionResponse> findByAccount(Long accountId){return transactionRepository.findByAccountIdOrderByTransactionDateDesc(accountId).stream().map(TransactionMapper::toResponse).toList();}
- @Transactional public TransactionResponse create(CreateTransactionRequest r){
-  Account a=accountService.getById(r.accountId()); applyBalance(a,r.type(),r.amount());
+ public List<TransactionResponse> findByAccount(Long accountId,Long userId){accountService.getByIdForUser(accountId,userId);return transactionRepository.findByAccountIdOrderByTransactionDateDesc(accountId).stream().map(TransactionMapper::toResponse).toList();}
+ @Transactional public TransactionResponse create(Long userId,CreateTransactionRequest r){
+  Account a=accountService.getByIdForUser(r.accountId(),userId); applyBalance(a,r.type(),r.amount());
   Transaction t=new Transaction(); t.setAccount(a);t.setAmount(r.amount());t.setType(r.type());t.setCategory(r.category());t.setDescription(r.description());
   t.setTransactionDate(r.transactionDate()==null?LocalDate.now():r.transactionDate());
   transactionRepository.save(t); return TransactionMapper.toResponse(t);
  }
- @Transactional public TransactionResponse update(Long id,UpdateTransactionRequest r){
+ @Transactional public TransactionResponse update(Long id,UpdateTransactionRequest r,Long userId){
   Transaction t=transactionRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
+  ResourceOwnership.requireOwner(userId,t.getAccount().getUser().getId());
+  Account a=accountService.getByIdForUser(r.accountId(),userId);
   reverseBalance(t.getAccount(),t.getType(),t.getAmount());
-  Account a=accountService.getById(r.accountId()); applyBalance(a,r.type(),r.amount());
+  applyBalance(a,r.type(),r.amount());
   t.setAccount(a);t.setAmount(r.amount());t.setType(r.type());t.setCategory(r.category());t.setDescription(r.description());
   t.setTransactionDate(r.transactionDate()==null?LocalDate.now():r.transactionDate());
   return TransactionMapper.toResponse(transactionRepository.save(t));
  }
- @Transactional public void delete(Long id){
+ @Transactional public void delete(Long id,Long userId){
   Transaction t=transactionRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found"));
+  ResourceOwnership.requireOwner(userId,t.getAccount().getUser().getId());
   reverseBalance(t.getAccount(),t.getType(),t.getAmount()); transactionRepository.delete(t);
  }
  private void applyBalance(Account a,TransactionType type,BigDecimal amount){a.setBalance(type==TransactionType.INCOME?a.getBalance().add(amount):a.getBalance().subtract(amount));}

@@ -29,7 +29,7 @@ public class AIScenarioInterpretationService {
 
         // Parse the natural language query into typed parameters
         String query = request.getNaturalLanguageQuery();
-        java.util.Map<String, Object> parameters = new java.util<>();
+        java.util.Map<String, Object> parameters = new java.util.HashMap<>();
 
         if (query != null) {
             // Simple parameter extraction - in production, this would use

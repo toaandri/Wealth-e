@@ -1,5 +1,6 @@
 package com.wealthe.ai.dto;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,9 +16,13 @@ class ScenarioInterpretRequestTest {
 
     @Test
     void testAllArgsConstructor() {
-        ScenarioInterpretRequest request = new ScenarioInterpretRequest(UUID.randomUUID(), "Test query", true);
+        UUID portfolioId = UUID.randomUUID();
+        ScenarioInterpretRequest request = new ScenarioInterpretRequest();
+        request.setPortfolioId(portfolioId);
+        request.setNaturalLanguageQuery("Test query");
+        request.setIncludeAssumptions(true);
         
-        assertEquals(UUID.randomUUID(), request.getPortfolioId());
+        assertEquals(portfolioId, request.getPortfolioId());
         assertEquals("Test query", request.getNaturalLanguageQuery());
         assertTrue(request.isIncludeAssumptions());
     }

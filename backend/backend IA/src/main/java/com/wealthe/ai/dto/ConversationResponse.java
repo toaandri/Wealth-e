@@ -1,5 +1,7 @@
 package com.wealthe.ai.dto;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class ConversationResponse {
@@ -10,7 +12,7 @@ public class ConversationResponse {
     private Instant createdAt;
     private Instant updatedAt;
     private boolean isActive;
-    private java.util.List<MessageResponse> messages;
+    private List<MessageResponse> messages;
 
     public UUID getId() {
         return id;
@@ -60,11 +62,11 @@ public class ConversationResponse {
         isActive = active;
     }
 
-    java.util.List<MessageResponse> getMessages() {
+    public List<MessageResponse> getMessages() {
         return messages;
     }
 
-    void setMessages(java.util.List<MessageResponse> messages) {
+    public void setMessages(List<MessageResponse> messages) {
         this.messages = messages;
     }
 }

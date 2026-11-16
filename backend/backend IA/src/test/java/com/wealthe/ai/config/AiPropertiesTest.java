@@ -8,7 +8,7 @@ class AiPropertiesTest {
     @Test
     void testDefaultValues() {
         AiProperties properties = new AiProperties();
-        assertFalse(properties.isEnabled());
+        assertTrue(properties.isEnabled());
         assertEquals("mock", properties.getProvider());
         assertEquals("http://localhost:11434", properties.getOllamaBaseUrl());
         assertEquals("llama2", properties.getModelName());

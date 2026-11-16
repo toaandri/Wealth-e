@@ -1,5 +1,7 @@
 package com.wealthe.ai.dto;
 
+import java.time.Instant;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,10 @@ class MessageResponseTest {
     @Test
     void testAllArgsConstructor() {
         UUID msgId = UUID.randomUUID();
-        MessageResponse response = new MessageResponse(msgId, "user", "Hello!", null, null, null);
+        MessageResponse response = new MessageResponse();
+        response.setId(msgId);
+        response.setRole("user");
+        response.setContent("Hello!");
         
         assertEquals(msgId, response.getId());
         assertEquals("user", response.getRole());

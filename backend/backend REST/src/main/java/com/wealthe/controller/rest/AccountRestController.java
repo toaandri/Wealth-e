@@ -7,6 +7,8 @@ import com.wealthe.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,28 +32,38 @@ public class AccountRestController {
     }
 
     @GetMapping
-    public List<AccountResponse> all(@RequestParam Long userId) {
-        return accountService.findAllByUser(userId);
+    public List<AccountResponse> all(@RequestParam Long userId, @AuthenticationPrincipal UserDetails principal) {
+        Long authenticatedUserId = AuthenticatedUser.id(principal);
+        AuthenticatedUser.requireClaim(userId, authenticatedUserId);
+        return accountService.findAllByUser(authenticatedUserId);
     }
 
     @GetMapping("/{id}")
-    public AccountResponse one(@PathVariable Long id) {
-        return accountService.findById(id);
+    public AccountResponse one(@PathVariable Long id, @AuthenticationPrincipal UserDetails principal) {
+        return accountService.findById(id, AuthenticatedUser.id(principal));
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request) {
+    public ResponseEntity<AccountResponse> create(
+            @Valid @RequestBody CreateAccountRequest request,
+            @AuthenticationPrincipal UserDetails principal
+    ) {
+        AuthenticatedUser.requireClaim(request.userId(), AuthenticatedUser.id(principal));
         return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(request));
     }
 
     @PutMapping("/{id}")
-    public AccountResponse update(@PathVariable Long id, @Valid @RequestBody UpdateAccountRequest request) {
-        return accountService.update(id, request);
+    public AccountResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateAccountRequest request,
+            @AuthenticationPrincipal UserDetails principal
+    ) {
+        return accountService.update(id, request, AuthenticatedUser.id(principal));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        accountService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails principal) {
+        accountService.delete(id, AuthenticatedUser.id(principal));
         return ResponseEntity.noContent().build();
     }
 }

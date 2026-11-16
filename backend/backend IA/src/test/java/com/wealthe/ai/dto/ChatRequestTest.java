@@ -1,5 +1,6 @@
 package com.wealthe.ai.dto;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,9 +17,14 @@ class ChatRequestTest {
 
     @Test
     void testAllArgsConstructor() {
-        ChatRequest request = new ChatRequest(UUID.randomUUID(), "Test message", true, "custom-model");
+        UUID conversationId = UUID.randomUUID();
+        ChatRequest request = new ChatRequest();
+        request.setConversationId(conversationId);
+        request.setMessage("Test message");
+        request.setIncludeTools(true);
+        request.setModelOverride("custom-model");
         
-        assertEquals(UUID.randomUUID(), request.getConversationId());
+        assertEquals(conversationId, request.getConversationId());
         assertEquals("Test message", request.getMessage());
         assertTrue(request.isIncludeTools());
         assertEquals("custom-model", request.getModelOverride());

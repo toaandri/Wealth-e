@@ -19,13 +19,22 @@ public class AIConversationService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public ChatResponse processAndRecord(ChatRequest request, ChatConversation conversation) {
-        ChatResponse response = processChat(request);
+    private final AIService aiService;
 
-        ChatMessage userMessage = saveUserMessage(conversation, request.getMessage());
+    public AIConversationService(AIService aiService) {
+        this.aiService = aiService;
+    }
+
+    public ChatResponse processAndRecord(ChatRequest request, ChatConversation conversation) {
+        ChatResponse response = aiService.processChat(request);
+        if (conversation == null) {
+            return response;
+        }
+
+        ChatMessage userMessage = aiService.saveUserMessage(conversation, request.getMessage());
         entityManager.persist(userMessage);
 
-        ChatMessage assistantMessage = saveAssistantMessage(
+        ChatMessage assistantMessage = aiService.saveAssistantMessage(
             conversation,
             response.getContent(),
             response.getToolName(),

@@ -1,7 +1,9 @@
 package com.wealthe.ai.domain;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.Instant;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.util.UUID;
 
 @Entity
@@ -9,8 +11,8 @@ import java.util.UUID;
 public class KnowledgeDocument {
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
-    @ColumnDefinition(length = 36)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "id", nullable = false, updatable = false, length = 36)
     private UUID id = UUID.randomUUID();
 
     @Column(name = "title", nullable = false)

@@ -7,6 +7,7 @@ import com.wealthe.dto.response.UserResponse;
 import com.wealthe.config.AuthTokenService;
 import com.wealthe.entity.User;
 import com.wealthe.exception.BusinessException;
+import com.wealthe.exception.InvalidCredentialsException;
 import com.wealthe.mapper.UserMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         User user = userService.getByEmail(request.email().toLowerCase());
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new BusinessException("Invalid credentials");
+            throw new InvalidCredentialsException();
         }
         return new AuthResponse(tokenService.issue(user.getId()), UserMapper.toResponse(user));
     }

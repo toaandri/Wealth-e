@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
@@ -50,5 +52,29 @@ class WealthEApplicationTests {
                         .param("userId", "2")
                         .header("Authorization", "Bearer " + tokenService.issue(1L)))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void invalidBearerTokenIsRejected() throws Exception {
+        mockMvc.perform(get("/api/accounts")
+                        .param("userId", "1")
+                        .header("Authorization", "Bearer invalid-token"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void missingResourceReturnsNotFound() throws Exception {
+        mockMvc.perform(get("/api/accounts/999")
+                        .header("Authorization", "Bearer " + tokenService.issue(1L)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void loginWithUnknownEmailReturnsUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType("application/json")
+                        .content("{\"email\":\"missing@example.com\",\"password\":\"secret123\"}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"status\":401,\"message\":\"Invalid credentials\"}"));
     }
 }

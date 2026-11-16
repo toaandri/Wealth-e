@@ -1,7 +1,7 @@
 package com.wealthe.service;
 
 import com.wealthe.entity.User;
-import com.wealthe.exception.BusinessException;
+import com.wealthe.exception.InvalidCredentialsException;
 import com.wealthe.exception.ResourceNotFoundException;
 import com.wealthe.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserService {
 
     public User getByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Invalid credentials"));
+                .orElseThrow(InvalidCredentialsException::new);
     }
 
     public boolean existsByEmail(String email) {

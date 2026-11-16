@@ -6,6 +6,7 @@ import java.util.UUID;
 public class ChatResponse {
 
     private UUID messageId;
+    private UUID conversationId;
     private String role;
     private String content;
     private Instant createdAt;
@@ -19,6 +20,14 @@ public class ChatResponse {
 
     public void setMessageId(UUID messageId) {
         this.messageId = messageId;
+    }
+
+    public UUID getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(UUID conversationId) {
+        this.conversationId = conversationId;
     }
 
     public String getRole() {

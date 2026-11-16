@@ -18,6 +18,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    ResponseEntity<?> unauthorized(InvalidCredentialsException e) {
+        return ResponseEntity.status(401).body(
+                Map.of("timestamp", Instant.now(), "status", 401, "message", e.getMessage())
+        );
+    }
+
     @ExceptionHandler({BusinessException.class, IllegalArgumentException.class})
     ResponseEntity<?> badRequest(RuntimeException e) {
         return ResponseEntity.badRequest().body(

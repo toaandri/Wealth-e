@@ -30,6 +30,7 @@ public class AIConversationService {
         if (conversation == null) {
             return response;
         }
+        response.setConversationId(conversation.getId());
 
         ChatMessage userMessage = aiService.saveUserMessage(conversation, request.getMessage());
         entityManager.persist(userMessage);
@@ -40,6 +41,7 @@ public class AIConversationService {
             response.getToolName(),
             response.getToolCallsJson()
         );
+        assistantMessage.setId(response.getMessageId());
         entityManager.persist(assistantMessage);
 
         return response;

@@ -1,0 +1,14 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.5.8-hotspot",
+            "default": true
+        }
+    ],
+    "terminal.integrated.env.windows": {
+        "JAVA_HOME": "C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.5.8-hotspot",
+        "Path": "C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.5.8-hotspot\\bin;${env:Path}"
+    }
+}
